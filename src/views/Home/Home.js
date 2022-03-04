@@ -1,21 +1,23 @@
+
+   
 import React, { useMemo } from 'react';
 import Page from '../../components/Page';
 import HomeImage from '../../assets/img/home.png';
-import CashImage from '../../assets/img/crypto_ZGNOmb_cash.svg';
+import CashImage from '../../assets/img/crypto_tomb_cash.svg';
 import Image from 'material-ui-image';
 import { createGlobalStyle } from 'styled-components';
 import CountUp from 'react-countup';
 import CardIcon from '../../components/CardIcon';
 import TokenSymbol from '../../components/TokenSymbol';
-import useZGNOmbStats from '../../hooks/useZGNOmbStats';
+import useTombStats from '../../hooks/useTombStats';
 import useLpStats from '../../hooks/useLpStats';
 import useModal from '../../hooks/useModal';
 import useZap from '../../hooks/useZap';
 import useBondStats from '../../hooks/useBondStats';
-import useZGNShareStats from '../../hooks/useZGNShareStats';
+import usetShareStats from '../../hooks/usetShareStats';
 import useTotalValueLocked from '../../hooks/useTotalValueLocked';
-import { ZGNOmb as ZGNOmbTesting, ZGNShare as ZGNShareTesting } from '../../ZGNOmb-finance/deployments/deployments.testing.json';
-import { ZGNOmb as ZGNOmbProd, ZGNShare as ZGNShareProd } from '../../ZGNOmb-finance/deployments/deployments.mainnet.json';
+import { tomb as tombTesting, tShare as tShareTesting } from '../../tomb-finance/deployments/deployments.testing.json';
+import { tomb as tombProd, tShare as tShareProd } from '../../tomb-finance/deployments/deployments.mainnet.json';
 
 import MetamaskFox from '../../assets/img/metamask-fox.svg';
 
@@ -23,7 +25,7 @@ import { Box, Button, Card, CardContent, Grid, Paper } from '@material-ui/core';
 import ZapModal from '../Bank/components/ZapModal';
 
 import { makeStyles } from '@material-ui/core/styles';
-import useZGNOmbFinance from '../../hooks/useZGNOmbFinance';
+import useTombFinance from '../../hooks/useTombFinance';
 
 const BackgroundImage = createGlobalStyle`
   body {
@@ -43,49 +45,49 @@ const useStyles = makeStyles((theme) => ({
 const Home = () => {
   const classes = useStyles();
   const TVL = useTotalValueLocked();
-  const ZGNOmbFtmLpStats = useLpStats('ZGNOmb-FTM-LP');
-  const ZGNShareFtmLpStats = useLpStats('ZGNShare-FTM-LP');
-  const ZGNOmbStats = useZGNOmbStats();
-  const ZGNShareStats = useZGNShareStats();
+  const tombFtmLpStats = useLpStats('TOMB-FTM-LP');
+  const tShareFtmLpStats = useLpStats('TSHARE-FTM-LP');
+  const tombStats = useTombStats();
+  const tShareStats = usetShareStats();
   const tBondStats = useBondStats();
-  const ZGNOmbFinance = useZGNOmbFinance();
+  const tombFinance = useTombFinance();
 
-  let ZGNOmb;
-  let ZGNShare;
+  let tomb;
+  let tShare;
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    ZGNOmb = ZGNOmbTesting;
-    ZGNShare = ZGNShareTesting;
+    tomb = tombTesting;
+    tShare = tShareTesting;
   } else {
-    ZGNOmb = ZGNOmbProd;
-    ZGNShare = ZGNShareProd;
+    tomb = tombProd;
+    tShare = tShareProd;
   }
 
-  const buyZGNOmbAddress = 'https://spookyswap.finance/swap?outputCurrency=' + ZGNOmb.address;
-  const buyZGNShareAddress = 'https://spookyswap.finance/swap?outputCurrency=' + ZGNShare.address;
+  const buyTombAddress = 'https://spookyswap.finance/swap?outputCurrency=' + tomb.address;
+  const buyTShareAddress = 'https://spookyswap.finance/swap?outputCurrency=' + tShare.address;
 
-  const ZGNOmbLPStats = useMemo(() => (ZGNOmbFtmLpStats ? ZGNOmbFtmLpStats : null), [ZGNOmbFtmLpStats]);
-  const ZGNShareLPStats = useMemo(() => (ZGNShareFtmLpStats ? ZGNShareFtmLpStats : null), [ZGNShareFtmLpStats]);
-  const ZGNOmbPriceInDollars = useMemo(
-    () => (ZGNOmbStats ? Number(ZGNOmbStats.priceInDollars).toFixed(2) : null),
-    [ZGNOmbStats],
+  const tombLPStats = useMemo(() => (tombFtmLpStats ? tombFtmLpStats : null), [tombFtmLpStats]);
+  const tshareLPStats = useMemo(() => (tShareFtmLpStats ? tShareFtmLpStats : null), [tShareFtmLpStats]);
+  const tombPriceInDollars = useMemo(
+    () => (tombStats ? Number(tombStats.priceInDollars).toFixed(2) : null),
+    [tombStats],
   );
-  const ZGNOmbPriceInFTM = useMemo(() => (ZGNOmbStats ? Number(ZGNOmbStats.tokenInFtm).toFixed(2) : null), [ZGNOmbStats]);
-  const ZGNOmbCirculatingSupply = useMemo(() => (ZGNOmbStats ? String(ZGNOmbStats.circulatingSupply) : null), [ZGNOmbStats]);
-  const ZGNOmbTotalSupply = useMemo(() => (ZGNOmbStats ? String(ZGNOmbStats.totalSupply) : null), [ZGNOmbStats]);
+  const tombPriceInFTM = useMemo(() => (tombStats ? Number(tombStats.tokenInFtm).toFixed(2) : null), [tombStats]);
+  const tombCirculatingSupply = useMemo(() => (tombStats ? String(tombStats.circulatingSupply) : null), [tombStats]);
+  const tombTotalSupply = useMemo(() => (tombStats ? String(tombStats.totalSupply) : null), [tombStats]);
 
-  const ZGNSharePriceInDollars = useMemo(
-    () => (ZGNShareStats ? Number(ZGNShareStats.priceInDollars).toFixed(2) : null),
-    [ZGNShareStats],
+  const tSharePriceInDollars = useMemo(
+    () => (tShareStats ? Number(tShareStats.priceInDollars).toFixed(2) : null),
+    [tShareStats],
   );
-  const ZGNSharePriceInFTM = useMemo(
-    () => (ZGNShareStats ? Number(ZGNShareStats.tokenInFtm).toFixed(2) : null),
-    [ZGNShareStats],
+  const tSharePriceInFTM = useMemo(
+    () => (tShareStats ? Number(tShareStats.tokenInFtm).toFixed(2) : null),
+    [tShareStats],
   );
-  const ZGNShareCirculatingSupply = useMemo(
-    () => (ZGNShareStats ? String(ZGNShareStats.circulatingSupply) : null),
-    [ZGNShareStats],
+  const tShareCirculatingSupply = useMemo(
+    () => (tShareStats ? String(tShareStats.circulatingSupply) : null),
+    [tShareStats],
   );
-  const ZGNShareTotalSupply = useMemo(() => (ZGNShareStats ? String(ZGNShareStats.totalSupply) : null), [ZGNShareStats]);
+  const tShareTotalSupply = useMemo(() => (tShareStats ? String(tShareStats.totalSupply) : null), [tShareStats]);
 
   const tBondPriceInDollars = useMemo(
     () => (tBondStats ? Number(tBondStats.priceInDollars).toFixed(2) : null),
@@ -98,30 +100,30 @@ const Home = () => {
   );
   const tBondTotalSupply = useMemo(() => (tBondStats ? String(tBondStats.totalSupply) : null), [tBondStats]);
 
-  const ZGNOmbLpZap = useZap({ depositTokenName: 'ZGNOmb-FTM-LP' });
-  const ZGNShareLpZap = useZap({ depositTokenName: 'ZGNShare-FTM-LP' });
+  const tombLpZap = useZap({ depositTokenName: 'TOMB-FTM-LP' });
+  const tshareLpZap = useZap({ depositTokenName: 'TSHARE-FTM-LP' });
 
-  const [onPresentZGNOmbZap, onDissmissZGNOmbZap] = useModal(
+  const [onPresentTombZap, onDissmissTombZap] = useModal(
     <ZapModal
       decimals={18}
       onConfirm={(zappingToken, tokenName, amount) => {
         if (Number(amount) <= 0 || isNaN(Number(amount))) return;
-        ZGNOmbLpZap.onZap(zappingToken, tokenName, amount);
-        onDissmissZGNOmbZap();
+        tombLpZap.onZap(zappingToken, tokenName, amount);
+        onDissmissTombZap();
       }}
-      tokenName={'ZGNOmb-FTM-LP'}
+      tokenName={'TOMB-FTM-LP'}
     />,
   );
 
-  const [onPresentZGNShareZap, onDissmissZGNShareZap] = useModal(
+  const [onPresentTshareZap, onDissmissTshareZap] = useModal(
     <ZapModal
       decimals={18}
       onConfirm={(zappingToken, tokenName, amount) => {
         if (Number(amount) <= 0 || isNaN(Number(amount))) return;
-        ZGNShareLpZap.onZap(zappingToken, tokenName, amount);
-        onDissmissZGNShareZap();
+        tshareLpZap.onZap(zappingToken, tokenName, amount);
+        onDissmissTshareZap();
       }}
-      tokenName={'ZGNShare-FTM-LP'}
+      tokenName={'TSHARE-FTM-LP'}
     />,
   );
 
@@ -138,7 +140,7 @@ const Home = () => {
         <Grid item xs={12} sm={8}>
           <Paper>
             <Box p={4}>
-              <h2>Welcome to ZGNOmb Finance</h2>
+              <h2>Welcome to Tomb Finance</h2>
               <p>The first algorithmic stablecoin on Fantom Opera, pegged to the price of 1 FTM via seigniorage.</p>
               <p>
                 Stake your ZGNShare in the Masonry to earn inflationary ZGNOmb rewards or provide liquidity on pairs and
@@ -172,27 +174,27 @@ const Home = () => {
               <Button
                 color="primary"
                 target="_blank"
-                href={buyZGNOmbAddress}
+                href={buyTombAddress}
                 variant="contained"
                 style={{ marginRight: '10px' }}
               >
-                Buy ZGNOmb
+                Buy TOMB
               </Button>
-              <Button variant="contained" target="_blank" href={buyZGNShareAddress} className={classes.button}>
-                Buy ZGNShare
+              <Button variant="contained" target="_blank" href={buyTShareAddress} className={classes.button}>
+                Buy TSHARE
               </Button>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* ZGNOmb */}
+        {/* TOMB */}
         <Grid item xs={12} sm={4}>
           <Card>
             <CardContent align="center" style={{ position: 'relative' }}>
-              <h2>ZGNOmb</h2>
+              <h2>TOMB</h2>
               <Button
                 onClick={() => {
-                  ZGNOmbFinance.watchAssetInMetamask('ZGNOmb');
+                  tombFinance.watchAssetInMetamask('TOMB');
                 }}
                 color="primary"
                 variant="outlined"
@@ -203,35 +205,35 @@ const Home = () => {
               </Button>
               <Box mt={2}>
                 <CardIcon>
-                  <TokenSymbol symbol="ZGNOmb" />
+                  <TokenSymbol symbol="TOMB" />
                 </CardIcon>
               </Box>
               Current Price
               <Box>
-                <span style={{ fontSize: '30px' }}>{ZGNOmbPriceInFTM ? ZGNOmbPriceInFTM : '-.--'} FTM</span>
+                <span style={{ fontSize: '30px' }}>{tombPriceInFTM ? tombPriceInFTM : '-.--'} FTM</span>
               </Box>
               <Box>
                 <span style={{ fontSize: '16px', alignContent: 'flex-start' }}>
-                  ${ZGNOmbPriceInDollars ? ZGNOmbPriceInDollars : '-.--'}
+                  ${tombPriceInDollars ? tombPriceInDollars : '-.--'}
                 </span>
               </Box>
               <span style={{ fontSize: '12px' }}>
-                Market Cap: ${(ZGNOmbCirculatingSupply * ZGNOmbPriceInDollars).toFixed(2)} <br />
-                Circulating Supply: {ZGNOmbCirculatingSupply} <br />
-                Total Supply: {ZGNOmbTotalSupply}
+                Market Cap: ${(tombCirculatingSupply * tombPriceInDollars).toFixed(2)} <br />
+                Circulating Supply: {tombCirculatingSupply} <br />
+                Total Supply: {tombTotalSupply}
               </span>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* ZGNShare */}
+        {/* TSHARE */}
         <Grid item xs={12} sm={4}>
           <Card>
             <CardContent align="center" style={{ position: 'relative' }}>
-              <h2>ZGNShare</h2>
+              <h2>TSHARE</h2>
               <Button
                 onClick={() => {
-                  ZGNOmbFinance.watchAssetInMetamask('ZGNShare');
+                  tombFinance.watchAssetInMetamask('TSHARE');
                 }}
                 color="primary"
                 variant="outlined"
@@ -242,20 +244,20 @@ const Home = () => {
               </Button>
               <Box mt={2}>
                 <CardIcon>
-                  <TokenSymbol symbol="ZGNShare" />
+                  <TokenSymbol symbol="TSHARE" />
                 </CardIcon>
               </Box>
               Current Price
               <Box>
-                <span style={{ fontSize: '30px' }}>{ZGNSharePriceInFTM ? ZGNSharePriceInFTM : '-.--'} FTM</span>
+                <span style={{ fontSize: '30px' }}>{tSharePriceInFTM ? tSharePriceInFTM : '-.--'} FTM</span>
               </Box>
               <Box>
-                <span style={{ fontSize: '16px' }}>${ZGNSharePriceInDollars ? ZGNSharePriceInDollars : '-.--'}</span>
+                <span style={{ fontSize: '16px' }}>${tSharePriceInDollars ? tSharePriceInDollars : '-.--'}</span>
               </Box>
               <span style={{ fontSize: '12px' }}>
-                Market Cap: ${(ZGNShareCirculatingSupply * ZGNSharePriceInDollars).toFixed(2)} <br />
-                Circulating Supply: {ZGNShareCirculatingSupply} <br />
-                Total Supply: {ZGNShareTotalSupply}
+                Market Cap: ${(tShareCirculatingSupply * tSharePriceInDollars).toFixed(2)} <br />
+                Circulating Supply: {tShareCirculatingSupply} <br />
+                Total Supply: {tShareTotalSupply}
               </span>
             </CardContent>
           </Card>
@@ -268,7 +270,7 @@ const Home = () => {
               <h2>TBOND</h2>
               <Button
                 onClick={() => {
-                  ZGNOmbFinance.watchAssetInMetamask('TBOND');
+                  tombFinance.watchAssetInMetamask('TBOND');
                 }}
                 color="primary"
                 variant="outlined"
@@ -300,27 +302,27 @@ const Home = () => {
         <Grid item xs={12} sm={6}>
           <Card>
             <CardContent align="center">
-              <h2>ZGNOmb-FTM Spooky LP</h2>
+              <h2>TOMB-FTM Spooky LP</h2>
               <Box mt={2}>
                 <CardIcon>
-                  <TokenSymbol symbol="ZGNOmb-FTM-LP" />
+                  <TokenSymbol symbol="TOMB-FTM-LP" />
                 </CardIcon>
               </Box>
               <Box mt={2}>
-                <Button color="primary" onClick={onPresentZGNOmbZap} variant="contained">
+                <Button color="primary" onClick={onPresentTombZap} variant="contained">
                   Zap In
                 </Button>
               </Box>
               <Box mt={2}>
                 <span style={{ fontSize: '26px' }}>
-                  {ZGNOmbLPStats?.tokenAmount ? ZGNOmbLPStats?.tokenAmount : '-.--'} ZGNOmb /{' '}
-                  {ZGNOmbLPStats?.ftmAmount ? ZGNOmbLPStats?.ftmAmount : '-.--'} FTM
+                  {tombLPStats?.tokenAmount ? tombLPStats?.tokenAmount : '-.--'} TOMB /{' '}
+                  {tombLPStats?.ftmAmount ? tombLPStats?.ftmAmount : '-.--'} FTM
                 </span>
               </Box>
-              <Box>${ZGNOmbLPStats?.priceOfOne ? ZGNOmbLPStats.priceOfOne : '-.--'}</Box>
+              <Box>${tombLPStats?.priceOfOne ? tombLPStats.priceOfOne : '-.--'}</Box>
               <span style={{ fontSize: '12px' }}>
-                Liquidity: ${ZGNOmbLPStats?.totalLiquidity ? ZGNOmbLPStats.totalLiquidity : '-.--'} <br />
-                Total supply: {ZGNOmbLPStats?.totalSupply ? ZGNOmbLPStats.totalSupply : '-.--'}
+                Liquidity: ${tombLPStats?.totalLiquidity ? tombLPStats.totalLiquidity : '-.--'} <br />
+                Total supply: {tombLPStats?.totalSupply ? tombLPStats.totalSupply : '-.--'}
               </span>
             </CardContent>
           </Card>
@@ -328,16 +330,16 @@ const Home = () => {
         <Grid item xs={12} sm={6}>
           <Card>
             <CardContent align="center">
-              <h2>ZGNShare-FTM Spooky LP</h2>
+              <h2>TSHARE-FTM Spooky LP</h2>
               <Box mt={2}>
                 <CardIcon>
-                  <TokenSymbol symbol="ZGNShare-FTM-LP" />
+                  <TokenSymbol symbol="TSHARE-FTM-LP" />
                 </CardIcon>
               </Box>
               <Box mt={2}>
                 <Button
                   color="primary"
-                  onClick={onPresentZGNShareZap}
+                  onClick={onPresentTshareZap}
                   variant="contained"
                 >
                   Zap In
@@ -345,15 +347,15 @@ const Home = () => {
               </Box>
               <Box mt={2}>
                 <span style={{ fontSize: '26px' }}>
-                  {ZGNShareLPStats?.tokenAmount ? ZGNShareLPStats?.tokenAmount : '-.--'} ZGNShare /{' '}
-                  {ZGNShareLPStats?.ftmAmount ? ZGNShareLPStats?.ftmAmount : '-.--'} FTM
+                  {tshareLPStats?.tokenAmount ? tshareLPStats?.tokenAmount : '-.--'} TSHARE /{' '}
+                  {tshareLPStats?.ftmAmount ? tshareLPStats?.ftmAmount : '-.--'} FTM
                 </span>
               </Box>
-              <Box>${ZGNShareLPStats?.priceOfOne ? ZGNShareLPStats.priceOfOne : '-.--'}</Box>
+              <Box>${tshareLPStats?.priceOfOne ? tshareLPStats.priceOfOne : '-.--'}</Box>
               <span style={{ fontSize: '12px' }}>
-                Liquidity: ${ZGNShareLPStats?.totalLiquidity ? ZGNShareLPStats.totalLiquidity : '-.--'}
+                Liquidity: ${tshareLPStats?.totalLiquidity ? tshareLPStats.totalLiquidity : '-.--'}
                 <br />
-                Total supply: {ZGNShareLPStats?.totalSupply ? ZGNShareLPStats.totalSupply : '-.--'}
+                Total supply: {tshareLPStats?.totalSupply ? tshareLPStats.totalSupply : '-.--'}
               </span>
             </CardContent>
           </Card>
